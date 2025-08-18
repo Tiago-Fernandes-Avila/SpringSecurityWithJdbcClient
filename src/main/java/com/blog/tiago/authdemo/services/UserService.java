@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.blog.tiago.authdemo.domain.user.User;
-import com.blog.tiago.authdemo.domain.user.UserSignup;
 import com.blog.tiago.authdemo.repository.UserRepository;
 
 @Service
@@ -23,7 +22,7 @@ public class UserService {
     }    
 
     @Transactional
-    public void signup (UserSignup userSignup) throws Exception{
+    public void signup (User userSignup) throws Exception{
         String email = userSignup.email();
         Optional<User> existingUser = userRepository.findByEmail(email);
         if (existingUser.isPresent()) {

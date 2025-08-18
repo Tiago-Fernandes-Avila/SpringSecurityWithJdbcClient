@@ -2,6 +2,7 @@ package com.blog.tiago.authdemo.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -14,11 +15,15 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http.httpBasic(basic -> basic.disable())
-    .formLogin(e -> e.disable())
-    .authorizeHttpRequests(e -> e.anyRequest().permitAll())
-    .csrf(e-> e.disable())
-    .headers().frameOptions(e -> e.disable());
+        http.httpBasic(Customizer.withDefaults())
+                .formLogin(e -> e.disable())
+                .authorizeHttpRequests(e -> e.requestMatchers("private/**").authenticated().anyRequest().permitAll())
+                .csrf(e -> e.disable())
+                .headers(headers -> headers.frameOptions(e -> e.disable()))
+                .oauth2ResourceServer(
+                    conf -> conf.jwt(Customizer.withDefaults())
+                );
+
     
 
         return http.build();
@@ -29,4 +34,11 @@ public class SecurityConfiguration {
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
+
+
+
+    public JwtDecoder jwtDecoder(){
+        return NimbusJwtDecoder.withPublicKey(publicKey()).build();
+    }
+ 
 }

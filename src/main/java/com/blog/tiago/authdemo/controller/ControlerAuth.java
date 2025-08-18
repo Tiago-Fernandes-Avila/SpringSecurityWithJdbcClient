@@ -3,11 +3,12 @@ package com.blog.tiago.authdemo.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.blog.tiago.authdemo.domain.user.UserSignup;
+import com.blog.tiago.authdemo.services.AuthService;
 import com.blog.tiago.authdemo.services.UserService;
 
 import jakarta.validation.Valid;
@@ -16,25 +17,23 @@ import jakarta.validation.Valid;
 @RequestMapping("/public/auth")
 public class ControlerAuth {
 
-    @Autowired
-    private UserService userService;
+    private final AuthService authService;
+
+    public ControlerAuth(AuthService authService) {
+        this.authService = authService;
+    }
+
+
+
+    
 
 
     @RequestMapping("/signin")
-    public ResponseEntity<Void> login(@Valid @RequestBody UserSignup userSignup) throws Exception {
-        userService.signup(userSignup);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<String> Authenticate(Authentication authentication) throws Exception {
+        var token = authService.authenticate(authentication); 
+        return ResponseEntity.ok(token);
     }
 
-   /*  @RequestMapping("/signup")
-    public ResponseEntity<Void> signup() {
-        return ResponseEntity.ok().build();
-    }
-
-    @RequestMapping("/logout")
-    public ResponseEntity<Void> logout() {
-        return ResponseEntity.ok().build();
-    }*/
 
 
 }
