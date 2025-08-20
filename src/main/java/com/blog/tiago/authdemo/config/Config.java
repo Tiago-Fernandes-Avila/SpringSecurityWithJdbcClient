@@ -6,24 +6,22 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import com.blog.tiago.authdemo.domain.user.User;
 
-import com.blog.tiago.authdemo.domain.user.UserSignup;
 import com.blog.tiago.authdemo.repository.UserRepository;
-import com.blog.tiago.authdemo.services.UserService;
+import com.blog.tiago.authdemo.services.AuthService;
 
 @Configuration
 public class Config implements CommandLineRunner {
 
-    private final UserService userService;
-
-    public Config(UserService userService){
-        this.userService = userService;
-    }
+    @Autowired
+    private AuthService service;
   
 
     @Override
     public void run(String... args) throws Exception {
         
+        service.signup(new User("username", "email", "password"));
         
     }
 

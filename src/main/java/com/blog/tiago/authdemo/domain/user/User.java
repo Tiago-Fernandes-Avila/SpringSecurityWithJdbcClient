@@ -14,4 +14,5 @@ public record User(
     @Size(min = 8, max = 20, message= "Password must be at least 8 characters long")
     String password
 ){
+    
 }

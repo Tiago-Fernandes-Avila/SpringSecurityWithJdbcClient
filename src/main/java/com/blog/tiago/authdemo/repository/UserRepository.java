@@ -13,6 +13,7 @@ import com.blog.tiago.authdemo.domain.user.User;
 public class UserRepository {
     private static final String INSERT = "INSERT INTO tb_users(name, email, password) VALUES (?,?,?)";
     private static final String FindByEmail = "SELECT * FROM tb_users WHERE tb_users.email = ?";
+    private static final String findByUserName = "SELECT * FROM tb_users WHERE tb_users.username = ?";
 
     private final JdbcClient jdbcClient;
 
@@ -30,6 +31,14 @@ public class UserRepository {
         
     }
 
+    public Optional<User> findByUserName(String username){
+        return jdbcClient.sql(findByUserName)
+        .param(username)
+        .query(User.class)
+        .optional();
+
+    }
+
     public void add(User user) {
        long affected = jdbcClient.sql(INSERT)
         .param(user.username())
@@ -37,9 +46,7 @@ public class UserRepository {
         .param(user.password())
         .update();
         Assert.isTrue(affected == 1, "Error inserting user");
-
-
-
     }
+
 
 }
