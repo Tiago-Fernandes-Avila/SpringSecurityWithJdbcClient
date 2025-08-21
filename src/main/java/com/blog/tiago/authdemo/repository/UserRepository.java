@@ -11,7 +11,7 @@ import com.blog.tiago.authdemo.domain.user.User;
 
 @Repository
 public class UserRepository {
-    private static final String INSERT = "INSERT INTO tb_users(name, email, password) VALUES (?,?,?)";
+    private static final String INSERT = "INSERT INTO tb_users(username, email, password) VALUES (?,?,?)";
     private static final String FindByEmail = "SELECT * FROM tb_users WHERE tb_users.email = ?";
     private static final String findByUserName = "SELECT * FROM tb_users WHERE tb_users.username = ?";
 

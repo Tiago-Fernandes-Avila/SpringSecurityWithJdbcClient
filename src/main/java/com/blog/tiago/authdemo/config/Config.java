@@ -21,7 +21,7 @@ public class Config implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         
-        service.signup(new User("username", "email", "password"));
+        service.register(new User("username", "email", "password"));
         
     }
 

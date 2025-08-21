@@ -24,6 +24,8 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+
+
     public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -35,36 +37,32 @@ public class AuthService {
 
      var optnUser = userRepository.findByUserName(user.username()).orElseThrow(() -> new BadCredentialsException("User not found"));
 
-        if (passwordEncoder.matches(optnUser.password(), passwordEncoder.encode(user.password()))){
+        if (optnUser == null || !(passwordEncoder.matches(user.password() , optnUser.password() ))){
             throw new BadCredentialsException("Invalid password");
         }
 
-        var expiresIn = 300000L;
+        var expiresIn = 4L;
         var now = Instant.now();
 
         var claims = JwtClaimsSet.builder()
         .issuer("self")
         .issuedAt(now)
         .subject(user.username())
-        .expiresAt(now.plusMillis(expiresIn)).build();
+        .expiresAt(now.plusSeconds(expiresIn)).build();
         
 
 
         var token = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
-
+       
         
-        LoginResponse loginResponse = new LoginResponse(token, now.plusMillis(expiresIn));
+        LoginResponse loginResponse = new LoginResponse(token, expiresIn);
 
         return loginResponse;
 
     }
 
-
-
-
- 
-      @Transactional
-    public void signup (User user) throws Exception{
+    @Transactional
+    public void register(User user) throws Exception{
         String email = user.email();
         Optional<User> existingUser = userRepository.findByEmail(email);
         if (existingUser.isPresent()) {

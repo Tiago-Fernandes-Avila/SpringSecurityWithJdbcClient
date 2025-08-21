@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/private")
 public class PrivateController {
 
-    @GetMapping("/home")
+    @GetMapping("/hello")
     public String getString() {
-        return "Olá, seja bem-vindo.";
+        return "Hello, Welcome!";
     }
     
     
